@@ -4,9 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use DataTables;
 
 class CategoryController extends Controller
 {
+    public function listdata()
+    {
+        $categories = Category::orderBy('id', 'desc')->get();
+        $no = 0;
+        $data = array();
+        foreach ($categories as $category) {
+            $no++;
+            $row = array();
+            $row[] = $no;
+            $row[] = $category->name;
+            $row[] = '<a href="#" class="btn btn-primary"><i class="fas fa-edit"></i></a>';
+            $data[] = $row;
+        }
+        $output = array("data" => $data);
+        // return response()->json($output);
+        return DataTables::of($output)->escapeColumns([])->make(true);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +32,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return view('category.index');
+        $categories = Category::orderBy('id', 'desc')->get();
+        return view('category.index', compact('categories'));
     }
 
     /**
