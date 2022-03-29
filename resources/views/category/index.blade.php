@@ -24,7 +24,7 @@
                         <div class="card-title">
                             <a href="#" class="btn btn-danger btn-lg">Tambah Data</a>
                         </div>
-                        <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                        <table  class="table data-table table-bordered dt-responsive nowrap"
                             style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                             <thead>
                                 <tr>
@@ -42,23 +42,27 @@
     </div>
 @endsection
 @section('script')
-    <script>
-        var table, save_method;
+    <script type="text/javascript">
         $(function() {
-            table = $('.table').DataTable({
-                "processing": true,
-                "serverside": true,
-                "ajax": {
-                    "url": "{{ route('category.data') }}",
-                    "type": "GET"
-                },
-                "column": [{
+            $('.table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: '{{ route('category.index') }}',
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex'
+                    },
+                    {
                         data: 'name',
                         name: 'name'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
                     }
-
                 ]
-
             });
         });
     </script>

@@ -8,8 +8,9 @@ use DataTables;
 
 class CategoryController extends Controller
 {
-    public function listdata()
+    public function listdata(Request $request)
     {
+
         $categories = Category::orderBy('id', 'desc')->get();
         $no = 0;
         $data = array();
@@ -23,16 +24,29 @@ class CategoryController extends Controller
         }
         $output = array("data" => $data);
         // return response()->json($output);
-        return DataTables::of($output)->escapeColumns([])->make(true);
+        return response()->json($output);
+
     }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::orderBy('id', 'desc')->get();
+        $categories = Category::latest()->get();
+        if ($request->ajax()) {
+            $data = Category::latest()->get();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm editCategory">Edit</a>';
+                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Delete" class="btn btn-danger btn-sm deleteCategory">Delete</a>';
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
         return view('category.index', compact('categories'));
     }
 
