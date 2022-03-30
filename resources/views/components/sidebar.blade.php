@@ -13,7 +13,7 @@
             </span>
             <span class="menu-arrow float-right"><i class="mdi mdi-chevron-right"></i></span></a>
         <ul class="list-unstyled">
-            <li><a href="#">Data Kategori</a></li>
+            <li><a href="{{ route('category.index') }}">Data Kategori</a></li>
         </ul>
     </li>
 
