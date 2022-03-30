@@ -22,9 +22,10 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="card-title">
-                            <a href="#" class="btn btn-danger btn-lg">Tambah Data</a>
+                            <button id="createNewCategory" class="btn btn btn-info waves-effect waves-light" data-toggle="modal"
+                                data-target="#myModal">Tambah Data Kategori</button>
                         </div>
-                        <table  class="table data-table table-bordered dt-responsive nowrap"
+                        <table class="table data-table table-bordered dt-responsive nowrap"
                             style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                             <thead>
                                 <tr>
@@ -40,10 +41,17 @@
             </div>
         </div>
     </div>
+    @include('category.form')
 @endsection
 @section('script')
     <script type="text/javascript">
+        var table, save_method;
         $(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
             $('.table').DataTable({
                 processing: true,
                 serverSide: true,
@@ -63,6 +71,31 @@
                         searchable: false
                     }
                 ]
+            });
+            $('#createNewCategory').click(function() {
+                save_method = "add";
+                $('#myModal form')[0].reset();
+                $('#myModal').modal('show');
+            });
+            $('#myModal form').on('submit', function(e) {
+                if (!e.isDefaultPrevented()) {
+                    var id = $('#id').val();
+                    if (save_method == 'add') url = "{{ route('category.store') }}";
+                    else url = "category/" + id;
+                    $.ajax({
+                        url: url,
+                        type: "POST",
+                        data: $('#myModal form').serialize(),
+                        success: function(data) {
+                            $('#myModal').modal('hide');
+                            table.ajax.reload();
+                        },
+                        error: function() {
+                            alert("Tidak dapat menyimpan data!");
+                        }
+                    });
+                    return false;
+                }
             });
         });
     </script>

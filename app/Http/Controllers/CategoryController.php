@@ -25,7 +25,6 @@ class CategoryController extends Controller
         $output = array("data" => $data);
         // return response()->json($output);
         return response()->json($output);
-
     }
     /**
      * Display a listing of the resource.
@@ -69,6 +68,9 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         //
+        $categori = new Category();
+        $categori->name = $request->name;
+        $categori->save();
     }
 
     /**
