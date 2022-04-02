@@ -22,8 +22,8 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="card-title">
-                            <button id="createNewCategory" class="btn btn btn-info waves-effect waves-light" data-toggle="modal"
-                                data-target="#myModal">Tambah Data Kategori</button>
+                            <button id="createNewCategory" class="btn btn btn-info waves-effect waves-light"
+                                data-toggle="modal" data-target="#myModal">Tambah Data Kategori</button>
                         </div>
                         <table class="table data-table table-bordered dt-responsive nowrap"
                             style="border-collapse: collapse; border-spacing: 0; width: 100%;">
@@ -96,6 +96,21 @@
                     });
                     return false;
                 }
+            });
+            //delete data
+            $('body').on('click', 'deleteCategory', function() {
+                var category_id = $(this).data("id");
+                confirm("Yakin akan menghapus data ini?");
+                $.ajax({
+                    type: "DELETE",
+                    url: "{{ route('category.store') }}" + category_id,
+                    success: function(data) {
+                        table.draw();
+                    },
+                    error: function(data) {
+                        alert("Tidak dapat menghapus data!", data);
+                    }
+                });
             });
         });
     </script>
